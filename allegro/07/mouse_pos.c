@@ -55,14 +55,17 @@ int main()
     al_register_event_source(event_queue, al_get_keyboard_event_source());
 
     bool running = true;
-    float mouse_x = 0, mouse_y = 0;
 
+    float mouse_x = 0, mouse_y = 0;
     int points_stored = 0;
     float pos_km_x[2] = {0}, pos_km_y[2] = {0};
 
+    float km_x = 0, km_y = 0, px = 0, py = 0;
+
+    ALLEGRO_EVENT ev;
+
     while (running)
     {
-        ALLEGRO_EVENT ev;
         al_wait_for_event(event_queue, &ev);
 
         if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
@@ -79,15 +82,15 @@ int main()
             if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
             {
                 running = false;
+                continue;
             }
             else if (ev.keyboard.keycode == ALLEGRO_KEY_SPACE)
             {
                 if (points_stored < 2)
                 {
                     // Armazena posição do mouse em km
-                    float km_x = (mouse_x / screen_width) * X_KM_MAX;
-                    float km_y =
-                        Y_KM_MAX - ((mouse_y / screen_height) * Y_KM_MAX);
+                    km_x = (mouse_x / screen_width) * X_KM_MAX;
+                    km_y = Y_KM_MAX - ((mouse_y / screen_height) * Y_KM_MAX);
 
                     pos_km_x[points_stored] = km_x;
                     pos_km_y[points_stored] = km_y;
@@ -105,9 +108,8 @@ int main()
 
         for (int i = 0; i < points_stored; i++)
         {
-            float px = (pos_km_x[i] / X_KM_MAX) * screen_width;
-            float py =
-                screen_height - (pos_km_y[i] / Y_KM_MAX) * screen_height;
+            px = (pos_km_x[i] / X_KM_MAX) * screen_width;
+            py = screen_height - (pos_km_y[i] / Y_KM_MAX) * screen_height;
 
             al_draw_filled_circle(px, py, 10, al_map_rgb(255, 0, 0));
 
