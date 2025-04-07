@@ -19,7 +19,9 @@ int main()
     al_init_ttf_addon();
 
     ALLEGRO_DISPLAY_MODE disp_data;
-    al_get_display_mode(0, &disp_data); // Pega o modo da tela principal
+
+    // Pega o modo da tela principal
+    al_get_display_mode(0, &disp_data);
     int screen_width = disp_data.width;
     int screen_height = disp_data.height;
 
@@ -52,6 +54,8 @@ int main()
     bool running = true;
     float mouse_x = 0, mouse_y = 0;
 
+    float pos_km_x = 0;
+    float pos_km_y = 0;
     while (running)
     {
         ALLEGRO_EVENT ev;
@@ -68,9 +72,8 @@ int main()
         }
 
         // Conversão para km com base na resolução real
-        float pos_km_x = (mouse_x / screen_width) * X_KM_MAX;
-        float pos_km_y =
-            ((screen_height - mouse_y) / screen_height) * Y_KM_MAX;
+        pos_km_x = (mouse_x / screen_width) * X_KM_MAX;
+        pos_km_y = ((screen_height - mouse_y) / screen_height) * Y_KM_MAX;
 
         al_clear_to_color(al_map_rgb(0, 0, 0));
 
