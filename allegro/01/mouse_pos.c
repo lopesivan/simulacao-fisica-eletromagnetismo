@@ -6,14 +6,17 @@
 #define SCREEN_WIDTH 1000
 #define SCREEN_HEIGHT 200
 
-int main() {
-    if (!al_init()) {
+int main()
+{
+    if (!al_init())
+    {
         fprintf(stderr, "Falha ao iniciar Allegro.\n");
         return -1;
     }
 
-    ALLEGRO_DISPLAY *display = al_create_display(SCREEN_WIDTH, SCREEN_HEIGHT);
-    if (!display) {
+    ALLEGRO_DISPLAY* display = al_create_display(SCREEN_WIDTH, SCREEN_HEIGHT);
+    if (!display)
+    {
         fprintf(stderr, "Falha ao criar display.\n");
         return -1;
     }
@@ -22,30 +25,39 @@ int main() {
     al_init_font_addon();
     al_init_ttf_addon();
 
-    ALLEGRO_FONT *font = al_load_font("arial.ttf", 16, 0);
-    if (!font) {
-        fprintf(stderr, "Fonte 'arial.ttf' não encontrada. Usando fonte padrão.\n");
+    ALLEGRO_FONT* font =
+        al_load_font("SauceCodeProNerdFontMono-Regular.ttf", 20, 0);
+    if (!font)
+    {
+        fprintf(stderr, "Fonte 'SauceCodeProNerdFontMono-Regular.ttf' não "
+                        "encontrada. Usando fonte padrão.\n");
         font = al_create_builtin_font();
-        if (!font) {
+        if (!font)
+        {
             fprintf(stderr, "Falha ao carregar fonte padrão.\n");
             return -1;
         }
     }
 
-    ALLEGRO_EVENT_QUEUE *event_queue = al_create_event_queue();
-    al_register_event_source(event_queue, al_get_display_event_source(display));
+    ALLEGRO_EVENT_QUEUE* event_queue = al_create_event_queue();
+    al_register_event_source(event_queue,
+                             al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_mouse_event_source());
 
     bool running = true;
     float mouse_x = 0, mouse_y = 0;
 
-    while (running) {
+    while (running)
+    {
         ALLEGRO_EVENT ev;
         al_wait_for_event(event_queue, &ev);
 
-        if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+        if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
+        {
             running = false;
-        } else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES) {
+        }
+        else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES)
+        {
             mouse_x = ev.mouse.x;
             mouse_y = ev.mouse.y;
         }
@@ -57,7 +69,9 @@ int main() {
         al_clear_to_color(al_map_rgb(0, 0, 0));
 
         char buffer[128];
-        snprintf(buffer, sizeof(buffer), "Posição do mouse: X = %.2f km, Y = %.2f km", pos_km_x, pos_km_y);
+        snprintf(buffer, sizeof(buffer),
+                 "Posição do mouse: X = %.2f km, Y = %.2f km", pos_km_x,
+                 pos_km_y);
         al_draw_text(font, al_map_rgb(255, 255, 255), 10, 10, 0, buffer);
 
         al_flip_display();
@@ -69,4 +83,3 @@ int main() {
 
     return 0;
 }
-
