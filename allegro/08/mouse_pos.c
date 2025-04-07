@@ -103,7 +103,7 @@ int main()
                     armazenar_posicao_mouse(mouse_x, mouse_y, screen_width,
                                             screen_height, pos_km_x, pos_km_y,
                                             points_stored);
-                    /* Esses arrays são decadentes para ponteiros
+                    /* Esses arrays são ponteiros
                      * automaticamente quando passados como argumentos. Ou
                      * seja, isso aqui:
                     armazenar_posicao_mouse(mouse_x, mouse_y, screen_width,
