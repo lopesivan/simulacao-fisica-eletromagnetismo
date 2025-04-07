@@ -15,6 +15,7 @@ int main()
     }
 
     al_install_mouse();
+    al_install_keyboard();
     al_init_font_addon();
     al_init_ttf_addon();
 
@@ -23,7 +24,6 @@ int main()
     int screen_width = disp_data.width;
     int screen_height = disp_data.height;
 
-    // (Opcional) modo tela cheia
     al_set_new_display_flags(ALLEGRO_FULLSCREEN);
     ALLEGRO_DISPLAY* display = al_create_display(screen_width, screen_height);
     if (!display)
@@ -50,10 +50,13 @@ int main()
     al_register_event_source(event_queue,
                              al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_mouse_event_source());
+    al_register_event_source(event_queue, al_get_keyboard_event_source());
 
     bool running = true;
     float mouse_x = 0, mouse_y = 0;
 
+    float pos_km_x = 0;
+    float pos_km_y = 0;
     while (running)
     {
         ALLEGRO_EVENT ev;
@@ -68,14 +71,16 @@ int main()
             mouse_x = ev.mouse.x;
             mouse_y = ev.mouse.y;
         }
+        else if (ev.type == ALLEGRO_EVENT_KEY_DOWN)
+        {
+            if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
+            {
+                running = false;
+            }
+        }
 
-        // Converte posição do mouse para km com origem no canto inferior
-        // esquerdo
-        float pos_km_x = (mouse_x / screen_width) * X_KM_MAX;
-        float pos_km_y = (mouse_y / screen_height) * Y_KM_MAX;
-
-        // Inverte o Y para que o 0 fique na parte de baixo
-        pos_km_y = Y_KM_MAX - pos_km_y;
+        pos_km_x = (mouse_x / screen_width) * X_KM_MAX;
+        pos_km_y = Y_KM_MAX - ((mouse_y / screen_height) * Y_KM_MAX);
 
         al_clear_to_color(al_map_rgb(0, 0, 0));
 
