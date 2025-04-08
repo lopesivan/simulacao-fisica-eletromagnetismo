@@ -16,6 +16,12 @@ void converter_km_para_pixel(float km_x, float km_y, int screen_width,
 
 float calcular_modulo_vetor(float x0, float y0, float x1, float y1);
 
+void desenhar_linha_conectando_dois_pontos(float* pos_km_x, float* pos_km_y,
+                                           int screen_width,
+                                           int screen_height);
+
+void resetar_posicoes(float* pos_km_x, float* pos_km_y);
+
 int main()
 {
     if (!al_init())
@@ -104,7 +110,7 @@ int main()
                     armazenar_posicao_mouse(mouse_x, mouse_y, screen_width,
                                             screen_height, pos_km_x, pos_km_y,
                                             points_stored);
-                    /* Esses arrays são ponteiros
+                    /* Esses arrays se comporatam como ponteiros
                      * automaticamente quando passados como argumentos. Ou
                      * seja, isso aqui:
                     armazenar_posicao_mouse(mouse_x, mouse_y, screen_width,
@@ -148,16 +154,8 @@ int main()
             // Desenhar linha conectando os dois pontos
             if (points_stored == 2)
             {
-                float x1, y1, x2, y2;
-                converter_km_para_pixel(pos_km_x[0], pos_km_y[0],
-                                        screen_width, screen_height, &x1,
-                                        &y1);
-                converter_km_para_pixel(pos_km_x[1], pos_km_y[1],
-                                        screen_width, screen_height, &x2,
-                                        &y2);
-
-                al_draw_line(x1, y1, x2, y2, al_map_rgb(0, 255, 0),
-                             2.0f); // linha verde
+                desenhar_linha_conectando_dois_pontos(
+                    pos_km_x, pos_km_y, screen_width, screen_height);
 
                 int id = 2;
 
@@ -181,10 +179,7 @@ int main()
                              20 + id * 30, 0, buffer);
 
                 // zerando as posiçoes
-                pos_km_x[0] = 0;
-                pos_km_y[0] = 0;
-                pos_km_x[1] = 0;
-                pos_km_y[1] = 0;
+                resetar_posicoes(pos_km_x, pos_km_y);
             }
 
             al_flip_display();
@@ -221,4 +216,27 @@ float calcular_modulo_vetor(float x0, float y0, float x1, float y1)
     float dx = x1 - x0;
     float dy = y1 - y0;
     return sqrtf(dx * dx + dy * dy);
+}
+
+void desenhar_linha_conectando_dois_pontos(float* pos_km_x, float* pos_km_y,
+                                           int screen_width,
+                                           int screen_height)
+{
+
+    float x1, y1, x2, y2;
+    converter_km_para_pixel(pos_km_x[0], pos_km_y[0], screen_width,
+                            screen_height, &x1, &y1);
+    converter_km_para_pixel(pos_km_x[1], pos_km_y[1], screen_width,
+                            screen_height, &x2, &y2);
+
+    al_draw_line(x1, y1, x2, y2, al_map_rgb(0, 255, 0),
+                 2.0f); // linha verde
+}
+
+void resetar_posicoes(float* pos_km_x, float* pos_km_y)
+{
+    pos_km_x[0] = 0;
+    pos_km_y[0] = 0;
+    pos_km_x[1] = 0;
+    pos_km_y[1] = 0;
 }
