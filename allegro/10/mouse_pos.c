@@ -5,8 +5,8 @@
 #include <math.h>
 #include <stdio.h>
 
-#define X_KM_MAX 100.0f
-#define Y_KM_MAX 100.0f
+#define X_KM_MAX 1920.0f
+#define Y_KM_MAX 1080.0f
 
 void armazenar_posicao_mouse(float mouse_x, float mouse_y, int screen_width,
                              int screen_height, float* pos_km_x,
