@@ -4,10 +4,11 @@ export PATH
 PKG_CONFIG_PATH:=/usr/lib/x86_64-linux-gnu/pkgconfig
 export PKG_CONFIG_PATH
 
-CC = gcc
+CC     = gcc
 CFLAGS = -Wall -std=c99
-SRC = mouse_pos.c
-BIN = mouse_pos
+
+SRC = main.c
+BIN = app
 
 ALLEGRO_LIBS_WITHOUT_VERSION = \
 		allegro \
@@ -17,11 +18,10 @@ ALLEGRO_LIBS_WITHOUT_VERSION = \
 		allegro_primitives
 
 ALLEGRO_LIBS_VERSION = $(addsuffix -5,$(ALLEGRO_LIBS_WITHOUT_VERSION))
-#ALLEGRO_LIBS_VERSION = $(patsubst %,%-5,$(ALLEGRO_LIBS_WITHOUT_VERSION))
 
-ALLEGRO_LIBS   = $(ALLEGRO_LIBS_VERSION)
-ALLEGRO_CFLAGS = $(shell /usr/bin/pkg-config --cflags $(ALLEGRO_LIBS))
-ALLEGRO_LDLIBS = $(shell /usr/bin/pkg-config --libs $(ALLEGRO_LIBS))
+ALLEGRO_LIBS         = $(ALLEGRO_LIBS_VERSION)
+ALLEGRO_CFLAGS       = $(shell /usr/bin/pkg-config --cflags $(ALLEGRO_LIBS))
+ALLEGRO_LDLIBS       = $(shell /usr/bin/pkg-config --libs $(ALLEGRO_LIBS))
 
 all: $(BIN)
 
