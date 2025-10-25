@@ -28,8 +28,10 @@ all: $(BIN)
 $(BIN): $(SRC)
 	$(CC) $(CFLAGS) $(ALLEGRO_CFLAGS) $^ -o $@ $(ALLEGRO_LDLIBS) -lm
 
+indent:
+	indent -kr -i4 -nut -l68 $(SRC)
 run:
 	./$(BIN)
 
 clean:
-	rm -f $(BIN)
+	rm -f $(BIN) *~
