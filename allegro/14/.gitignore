@@ -58,3 +58,4 @@ dkms.conf
 mouse_pos
 # End of https://www.toptal.com/developers/gitignore/api/c
 .cache/
+app
