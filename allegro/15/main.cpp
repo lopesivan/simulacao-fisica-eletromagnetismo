@@ -9,9 +9,7 @@
 #include <cmath>
 #include <iomanip>
 #include <iostream>
-#include <optional>
 #include <sstream>
-#include <string>
 #include <utility>
 #include <memory>  // <-- FALTAVA
 
@@ -49,6 +47,12 @@ using EventQueueUPtr =
     std::unique_ptr<ALLEGRO_EVENT_QUEUE, AllegroDeleter>;
 using FontUPtr = std::unique_ptr<ALLEGRO_FONT, AllegroDeleter>;
 
+DisplayUPtr display{al_create_display(screen_width, screen_height)};
+if(!display)
+{
+    std::cerr << "Falha ao criar display.\n";
+    return EXIT_FAILURE;
+}
 // -------------------- Utilidades de domínio --------------------
 namespace util
 {
