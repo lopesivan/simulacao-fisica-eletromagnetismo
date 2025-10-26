@@ -8,6 +8,14 @@
 #define X_KM_MAX 100.0f
 #define Y_KM_MAX 100.0f
 
+// Paleta de cores
+#define COLOR_GREEN  al_map_rgb(0, 255, 0)
+#define COLOR_RED    al_map_rgb(255, 0, 0)
+#define COLOR_YELLOW al_map_rgb(255, 255, 2)
+#define COLOR_CYAN   al_map_rgb(2, 255, 255)
+#define COLOR_WHITE  al_map_rgb(255, 255, 255)
+#define COLOR_BLACK  al_map_rgb(0, 0, 0)
+
 void armazenar_posicao_mouse(float  mouse_x,
                              float  mouse_y,
                              int    screen_width,
@@ -39,12 +47,14 @@ int main()
     al_init_ttf_addon();
     al_init_primitives_addon();
 
-    ALLEGRO_DISPLAY_MODE disp_data;
-    al_get_display_mode(0, &disp_data);
-    int screen_width  = disp_data.width;
-    int screen_height = disp_data.height;
+    // pega as informações da screen
+    ALLEGRO_DISPLAY_MODE screen_data;
+    al_get_display_mode(0, &screen_data);
+    int screen_width  = screen_data.width;
+    int screen_height = screen_data.height;
 
     al_set_new_display_flags(ALLEGRO_FULLSCREEN);
+    // seto o display com as informações
     ALLEGRO_DISPLAY* display =
         al_create_display(screen_width, screen_height);
 
@@ -76,23 +86,36 @@ int main()
         }
     }
 
+    // clang-format off
+    // Don't touch this!
+    float mouse_x = 0,
+          mouse_y = 0;
+
+    int   points_stored = 0;
+
+    float pos_km_x[2] = {0},
+          pos_km_y[2] = {0};
+
+    float px = 0,
+          py = 0;
+    // clang-format on
+    // Carry on formatting
+
+
+    // Eventos
+    ALLEGRO_EVENT        ev;
     ALLEGRO_EVENT_QUEUE* event_queue = al_create_event_queue();
     al_register_event_source(event_queue,
                              al_get_display_event_source(display));
+    // Eventos: mouse
     al_register_event_source(event_queue,
                              al_get_mouse_event_source());
+    // Eventos: teclado
     al_register_event_source(event_queue,
                              al_get_keyboard_event_source());
 
     bool running = true;
     bool redraw  = true;
-
-    float mouse_x = 0, mouse_y = 0;
-    int   points_stored = 0;
-    float pos_km_x[2] = {0}, pos_km_y[2] = {0};
-    float px = 0, py = 0;
-
-    ALLEGRO_EVENT ev;
 
     while(running)
     {
@@ -125,21 +148,16 @@ int main()
                                             pos_km_x,
                                             pos_km_y,
                                             points_stored);
-                    /* Esses arrays são ponteiros
-                     * automaticamente quando passados como
-                     argumentos. Ou
-                     * seja, isso aqui:
-                     armazenar_posicao_mouse(mouse_x, mouse_y,
-                     screen_width, screen_height, &pos_km_x[0],
-                     &pos_km_y[0],
-                     points_stored);
-                     */
 
                     points_stored++;
                 }
                 else
                 {
+                    // Zera aqui ao apertar espaço novamente
                     points_stored = 0;
+
+                    pos_km_x[0] = pos_km_y[0] = 0;
+                    pos_km_x[1] = pos_km_y[1] = 0;
                 }
                 redraw = true;
             }
@@ -148,7 +166,7 @@ int main()
 
         if(redraw)
         {
-            al_clear_to_color(al_map_rgb(0, 0, 0));
+            al_clear_to_color(COLOR_BLACK);
 
             char buffer[128];
 
@@ -161,8 +179,11 @@ int main()
                                         &px,
                                         &py);
 
+                // clang-format off
+                // Don't touch this!
                 al_draw_filled_circle(
-                    px, py, 10, al_map_rgb(255, 0, 0));
+                        px, py, 10,
+                        COLOR_RED);
 
                 snprintf(buffer,
                          sizeof(buffer),
@@ -171,12 +192,13 @@ int main()
                          pos_km_x[i],
                          pos_km_y[i]);
 
-                al_draw_text(font,
-                             al_map_rgb(255, 255, 255),
-                             20,
-                             20 + i * 30,
-                             0,
-                             buffer);
+                al_draw_text(
+                    font,
+                    COLOR_CYAN,
+                    20, 20 + i * 30,
+                    0, buffer);
+                // clang-format on
+                // Carry on formatting
             }
 
             // Desenhar linha conectando os dois pontos
@@ -189,6 +211,7 @@ int main()
                                         screen_height,
                                         &x1,
                                         &y1);
+
                 converter_km_para_pixel(pos_km_x[1],
                                         pos_km_y[1],
                                         screen_width,
@@ -200,7 +223,7 @@ int main()
                              y1,
                              x2,
                              y2,
-                             al_map_rgb(0, 255, 0),
+                             COLOR_GREEN,
                              2.0f);  // linha verde
 
                 int id = 2;
@@ -213,7 +236,7 @@ int main()
                          pos_km_y[1] - pos_km_y[0]);
 
                 al_draw_text(font,
-                             al_map_rgb(255, 255, 255),
+                             COLOR_YELLOW,
                              20,
                              20 + id * 30,
                              0,
@@ -222,25 +245,15 @@ int main()
                 id = 3;
                 snprintf(buffer,
                          sizeof(buffer),
-                         "Modulo   %d: u = %.2f km",
+                         "Modulo  %d: u = %.2f km",
                          id + 1,
                          calcular_modulo_vetor(pos_km_x[0],
                                                pos_km_y[0],
                                                pos_km_x[1],
                                                pos_km_y[1]));
 
-                al_draw_text(font,
-                             al_map_rgb(255, 255, 255),
-                             20,
-                             20 + id * 30,
-                             0,
-                             buffer);
-
-                // zerando as posiçoes
-                pos_km_x[0] = 0;
-                pos_km_y[0] = 0;
-                pos_km_x[1] = 0;
-                pos_km_y[1] = 0;
+                al_draw_text(
+                    font, COLOR_WHITE, 20, 20 + id * 30, 0, buffer);
             }
 
             al_flip_display();
