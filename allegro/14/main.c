@@ -2,6 +2,7 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_ttf.h>
+
 #include <math.h>
 #include <stdio.h>
 
@@ -70,8 +71,14 @@ int main()
         return -1;
     }
 
+    // Don't touch this!
+    // clang-format off
     ALLEGRO_FONT* font =
-        al_load_font("SauceCodeProNerdFontMono-Regular.ttf", 20, 0);
+        al_load_font("SauceCodeProNerdFontMono-Regular.ttf",
+                     20,
+                     0);
+    // clang-format on
+    // Carry on formatting
 
     if(!font)
     {
@@ -252,8 +259,16 @@ int main()
                                                pos_km_x[1],
                                                pos_km_y[1]));
 
+                // clang-format off
+                // Don't touch this!
                 al_draw_text(
-                    font, COLOR_WHITE, 20, 20 + id * 30, 0, buffer);
+                    font,
+                    COLOR_WHITE,
+                    20, 20 + id * 30,
+                    0,
+                    buffer);
+                // clang-format on
+                // Carry on formatting
             }
 
             al_flip_display();
